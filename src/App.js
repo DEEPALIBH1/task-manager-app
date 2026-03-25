@@ -1,24 +1,33 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { TaskProvider, useTaskContext } from "./context/TaskContext";
+import Header from "./components/Header";
+import TaskForm from "./components/TaskForm";
+import FilterBar from "./components/FilterBar";
+import TaskList from "./components/TaskList";
+import "./App.css";
 
+// Inner component that reads darkMode from context
+function AppContent() {
+  const { darkMode } = useTaskContext();
+
+  return (
+    <div className={`app ${darkMode ? "dark" : "light"}`}>
+      <div className="container">
+        <Header />
+        <TaskForm />
+        <FilterBar />
+        <TaskList />
+      </div>
+    </div>
+  );
+}
+
+// Outer component wraps everything with the provider
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <TaskProvider>
+      <AppContent />
+    </TaskProvider>
   );
 }
 

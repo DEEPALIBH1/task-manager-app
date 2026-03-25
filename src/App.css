@@ -1,38 +1,346 @@
-.App {
-  text-align: center;
+/* ===== RESET & BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* ===== THEME VARIABLES ===== */
+
+/* Light mode (default) */
+.app.light {
+  --bg: #f0f2f5;
+  --container-bg: #ffffff;
+  --text: #333333;
+  --text-secondary: #888888;
+  --border: #e0e0e0;
+  --primary: #4a90d9;
+  --primary-hover: #357abd;
+  --danger: #e74c3c;
+  --danger-hover: #c0392b;
+  --task-bg: #fafafa;
+  --task-hover: #f0f0f0;
+  --completed-bg: #e8f5e9;
+  --shadow: rgba(0, 0, 0, 0.1);
 }
 
-.App-header {
-  background-color: #282c34;
+/* Dark mode */
+.app.dark {
+  --bg: #1a1a2e;
+  --container-bg: #16213e;
+  --text: #e0e0e0;
+  --text-secondary: #aaaaaa;
+  --border: #2a2a4a;
+  --primary: #4a90d9;
+  --primary-hover: #5ba0e9;
+  --danger: #e74c3c;
+  --danger-hover: #ff6b6b;
+  --task-bg: #1a1a3e;
+  --task-hover: #222250;
+  --completed-bg: #1a3a2a;
+  --shadow: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== APP LAYOUT ===== */
+.app {
   min-height: 100vh;
+  background: var(--bg);
+  color: var(--text);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+/* ===== HEADER ===== */
+.app-header {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--border);
+}
+
+.app-header h1 {
+  font-size: 1.8rem;
+  color: var(--primary);
+}
+
+.theme-toggle {
+  padding: 8px 16px;
+  border: 2px solid var(--primary);
+  background: transparent;
+  color: var(--primary);
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+  background: var(--primary);
   color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* ===== TASK FORM ===== */
+.task-form {
+  margin-bottom: 20px;
 }
 
-@keyframes App-logo-spin {
+.input-group {
+  display: flex;
+  gap: 10px;
+}
+
+.task-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--task-bg);
+  color: var(--text);
+  transition: border-color 0.3s ease;
+  outline: none;
+}
+
+.task-input:focus {
+  border-color: var(--primary);
+}
+
+.add-btn {
+  padding: 12px 24px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.add-btn:hover {
+  background: var(--primary-hover);
+}
+
+.error-msg {
+  color: var(--danger);
+  font-size: 0.85rem;
+  margin-top: 6px;
+  animation: fadeIn 0.3s ease;
+}
+
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  margin-bottom: 16px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.filter-btn {
+  flex: 1;
+  padding: 8px 12px;
+  border: 2px solid var(--border);
+  background: transparent;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: white;
+}
+
+.filter-btn:hover:not(.active) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+/* ===== TASK LIST ===== */
+.task-list {
+  list-style: none;
+}
+
+.empty-msg {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 40px 0;
+  font-size: 1rem;
+}
+
+/* ===== TASK ITEM ===== */
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  margin-bottom: 8px;
+  background: var(--task-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: grab;
+  transition: all 0.3s ease;
+  animation: slideIn 0.3s ease;
+}
+
+.task-item:hover {
+  background: var(--task-hover);
+  box-shadow: 0 2px 8px var(--shadow);
+}
+
+.task-item.completed {
+  background: var(--completed-bg);
+}
+
+.task-item.dragging {
+  box-shadow: 0 4px 16px var(--shadow);
+  opacity: 0.9;
+}
+
+.task-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  cursor: pointer;
+}
+
+.checkbox {
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--primary);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: var(--primary);
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+}
+
+.completed .checkbox {
+  background: var(--primary);
+  color: white;
+}
+
+.task-text {
+  font-size: 1rem;
+  word-break: break-word;
+  transition: all 0.3s ease;
+}
+
+.completed .task-text {
+  text-decoration: line-through;
+  color: var(--text-secondary);
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--danger);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 0 4px;
+  opacity: 0;
+  transition: opacity 0.3s ease, color 0.3s ease;
+}
+
+.task-item:hover .delete-btn {
+  opacity: 1;
+}
+
+.delete-btn:hover {
+  color: var(--danger-hover);
+}
+
+/* ===== ANIMATIONS ===== */
+@keyframes slideIn {
   from {
-    transform: rotate(0deg);
+    opacity: 0;
+    transform: translateY(-10px);
   }
   to {
-    transform: rotate(360deg);
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN (Mobile-first) ===== */
+@media (max-width: 480px) {
+  .container {
+    padding: 12px;
+  }
+
+  .app-header h1 {
+    font-size: 1.3rem;
+  }
+
+  .theme-toggle {
+    padding: 6px 12px;
+    font-size: 0.75rem;
+  }
+
+  .input-group {
+    flex-direction: column;
+  }
+
+  .add-btn {
+    width: 100%;
+  }
+
+  .filter-buttons {
+    flex-wrap: wrap;
+  }
+
+  .filter-btn {
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+
+  .task-item {
+    padding: 10px 12px;
+  }
+
+  .delete-btn {
+    opacity: 1;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .container {
+    padding: 16px;
+  }
+
+  .app-header h1 {
+    font-size: 1.5rem;
   }
 }

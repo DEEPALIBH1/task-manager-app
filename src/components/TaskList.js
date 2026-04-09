@@ -10,7 +10,7 @@ function TaskList() {
     (result) => {
       // If dropped outside a valid area, do nothing
       if (!result.destination) return;
-      reorderTasks(result.source.index, result.destination.index);
+      reorderTasks(result.draggableId, result.destination.index);
     },
     [reorderTasks]
   );
